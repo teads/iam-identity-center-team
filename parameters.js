@@ -6,7 +6,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const { AWS_APP_ID, AWS_BRANCH, SSO_LOGIN, TEAM_ADMIN_GROUP, TEAM_AUDITOR_GROUP, TAGS, CLOUDTRAIL_AUDIT_LOGS, TEAM_ACCOUNT, AMPLIFY_CUSTOM_DOMAIN } = process.env;
+const { AWS_APP_ID, AWS_BRANCH, SSO_LOGIN, TEAM_ADMIN_GROUP, TEAM_AUDITOR_GROUP, TAGS, CLOUDTRAIL_AUDIT_LOGS, TEAM_ACCOUNT, AMPLIFY_CUSTOM_DOMAIN, ENABLE_MANAGEMENT_ACCOUNT_SAFEGUARD } = process.env;
 
 async function update_auth_parameters() {
   console.log(`updating amplify config for branch "${AWS_BRANCH}"...`);
@@ -35,6 +35,9 @@ async function update_auth_parameters() {
     JSON.stringify(oAuthMetadata);
 
   authParametersJson.cognitoConfig.hostedUIDomainName = AWS_APP_ID;
+
+  // Add the feature flag to the auth parameters
+  authParametersJson.cognitoConfig.enableManagementAccountSafeguard = ENABLE_MANAGEMENT_ACCOUNT_SAFEGUARD === 'true';
 
   fs.writeFileSync(
     authParametersJsonPath,

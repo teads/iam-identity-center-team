@@ -227,7 +227,12 @@ function Request(props) {
       setRoleError("Select a role");
       error = true;
     }
+
+    // Check if the safeguard is enabled
+    const enableManagementAccountSafeguard = process.env.REACT_APP_ENABLE_MANAGEMENT_ACCOUNT_SAFEGUARD === 'true';
+
     if (
+      enableManagementAccountSafeguard &&
       params.DeploymentType == "delegated" &&
       role &&
       mgmtPs.permissions.includes(role.value)
@@ -237,6 +242,7 @@ function Request(props) {
       );
       error = true;
     }
+
     if (!account.label) {
       setAccountError("Select an account");
       error = true;
